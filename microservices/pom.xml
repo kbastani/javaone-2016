@@ -24,7 +24,7 @@
 	</modules>
 
 	<properties>
-		<eventuateClientVersion>0.10.0.RELEASE</eventuateClientVersion>
+		<eventuateClientVersion>0.11.0.RELEASE</eventuateClientVersion>
 		<eventuateLocalVersion>0.4.0.RELEASE</eventuateLocalVersion>
 	</properties>
 
@@ -58,6 +58,12 @@
 			<groupId>io.eventuate.local.java</groupId>
 			<artifactId>eventuate-local-java-embedded-cdc-autoconfigure</artifactId>
 			<version>${eventuateLocalVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.eventuate.client.java</groupId>
+			<artifactId>eventuate-client-java-jdbc-common</artifactId>
+			<version>${eventuateClientVersion}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

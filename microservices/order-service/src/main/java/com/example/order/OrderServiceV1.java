@@ -5,14 +5,14 @@ import com.example.order.command.*;
 import com.example.order.domain.CreateOrderRequest;
 import com.example.order.domain.UpdateOrderRequest;
 import com.example.order.repository.OrderRepository;
-import io.eventuate.AggregateRepository;
-import io.eventuate.EntityWithIdAndVersion;
+import io.eventuate.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -23,22 +23,28 @@ public class OrderServiceV1 {
 
     private AggregateRepository<OrderAggregate, OrderCommand> aggregateRepository;
     private OrderRepository orderRepository;
+    private EventuateAggregateStore eventuateAggregateStore;
 
     @Autowired
     public OrderServiceV1(AggregateRepository<OrderAggregate, OrderCommand> aggregateRepository,
-                          OrderRepository orderRepository) {
+                          OrderRepository orderRepository, EventuateAggregateStore eventuateAggregateStore) {
         this.aggregateRepository = aggregateRepository;
         this.orderRepository = orderRepository;
+        this.eventuateAggregateStore = eventuateAggregateStore;
     }
 
 
     public OrderAggregate createOrder(CreateOrderRequest orderRequest) {
-        EntityWithIdAndVersion<OrderAggregate> entity = Util.get(aggregateRepository.save(new CreateOrderCommand(orderRequest.getOrderStatus())));
+        EntityWithIdAndVersion<OrderAggregate> createdAggregate =
+                Util.get(aggregateRepository.save(new CreateOrderCommand(orderRequest.getOrderStatus())));
 
         // Save using JPA too
 
-        entity.getAggregate().setId(entity.getEntityId());
-        return orderRepository.save(entity.getAggregate());
+        OrderAggregate orderAggregate = createdAggregate.getAggregate();
+        orderAggregate.setId(createdAggregate.getEntityId());
+        orderAggregate.setVersion(createdAggregate.getEntityVersion().asString());
+
+        return orderRepository.save(orderAggregate);
     }
 
     public OrderAggregate getOrder(String orderNumber) throws ExecutionException, InterruptedException {
@@ -48,13 +54,27 @@ public class OrderServiceV1 {
 
     public OrderAggregate process(String orderNumber, OrderCommand cmd)
             throws ExecutionException, InterruptedException {
-        OrderAggregate oa = getOrder(orderNumber);
-        EntityWithIdAndVersion<OrderAggregate> entity = Util.get(aggregateRepository.update(oa.getId(), cmd));
 
-        // Update via JPA too
-        entity.getAggregate().setId(entity.getEntityId());
-        orderRepository.save(entity.getAggregate());
-        return entity.getAggregate();
+        // Load from JPA
+
+        OrderAggregate oa = getOrder(orderNumber);
+
+        // Update
+
+        List<Event> events = oa.processCommand(cmd);
+        Aggregates.applyEventsToMutableAggregate(oa, events);
+
+        // Save to Eventuate
+
+        EntityIdAndVersion outcome = Util.get(eventuateAggregateStore.update(OrderAggregate.class,
+                new EntityIdAndVersion(oa.getId(), Int128.fromString(oa.getVersion())),
+                events));
+
+        // Update the version
+
+        oa.setVersion(outcome.getEntityVersion().asString());
+
+        return oa;
     }
 
     public OrderAggregate updateOrder(String id, UpdateOrderRequest updateOrderRequest)

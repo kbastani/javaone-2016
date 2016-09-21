@@ -36,6 +36,7 @@ public class OrderAggregate extends ReflectiveMutableCommandProcessingAggregate<
 
 
     protected OrderStatus status;
+    private String version;
 
     @Override
     public String toString() {
@@ -48,6 +49,10 @@ public class OrderAggregate extends ReflectiveMutableCommandProcessingAggregate<
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public String getOrderNumber() {
@@ -96,5 +101,7 @@ public class OrderAggregate extends ReflectiveMutableCommandProcessingAggregate<
     }
 
 
-
+    public String getVersion() {
+        return version;
+    }
 }
