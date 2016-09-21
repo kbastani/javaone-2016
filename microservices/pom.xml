@@ -18,9 +18,8 @@
 	</parent>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+		<eventuateClientVersion>0.8.0.RELEASE</eventuateClientVersion>
+		<eventuateLocalVersion>0.2.0.RELEASE</eventuateLocalVersion>
 	</properties>
 
 	<build>
@@ -31,6 +30,32 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.eventuate.client.java</groupId>
+			<artifactId>eventuate-client-java-spring</artifactId>
+			<version>${eventuateClientVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.eventuate.local.java</groupId>
+			<artifactId>eventuate-local-java-jdbc</artifactId>
+			<version>${eventuateLocalVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.eventuate.local.java</groupId>
+			<artifactId>eventuate-local-java-embedded-cdc-autoconfigure</artifactId>
+			<version>${eventuateLocalVersion}</version>
+		</dependency>
+	</dependencies>
+
+
+	<repositories>
+		<repository>
+			<id>eventuate-release</id>
+			<url>http://mavenrepo.eventuate.io/release</url>
+		</repository>
+	</repositories>
 
 
 </project>
