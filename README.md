@@ -22,7 +22,7 @@ After each of the Eventuate containers are started, setup your environment using
 
 Now that the environment has been setup, you can run the example order service.
 
-    $ cd ./microservices
+    $ cd ./microservices/order-service
     $ mvn spring-boot:run
 
 If the environment is properly configured, the `order-service` will start up and point to the Eventuate Local containers we started with Docker Compose. The application will start up on http://localhost:8080. To test that everything is working correctly, run the `e2e-test.sh` script.
