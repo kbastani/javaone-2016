@@ -1,13 +1,11 @@
 package com.example.order;
 
+import com.example.order.aggregate.OrderAggregate;
 import com.example.order.domain.CreateOrderRequest;
 import com.example.order.domain.UpdateOrderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -22,30 +20,23 @@ public class OrderControllerV1 {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "orders/{id}")
-    public ResponseEntity<?> getOrder(@PathVariable String id)
+    public OrderAggregate getOrder(@PathVariable String id)
             throws ExecutionException, InterruptedException {
         // Get the order entity and aggregate
-        return Optional.of(new ResponseEntity<>(orderService.getOrder(id), HttpStatus.OK))
-                .map(a -> a)
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return orderService.getOrder(id);
     }
 
     @RequestMapping(method = RequestMethod.PUT, path = "orders/{id}")
-    public ResponseEntity<?> updateOrder(@PathVariable String id, @RequestBody UpdateOrderRequest updateOrderRequest)
+    public OrderAggregate updateOrder(@PathVariable String id, @RequestBody UpdateOrderRequest updateOrderRequest)
             throws ExecutionException, InterruptedException {
         // Update the order status
-        return Optional.of(new ResponseEntity<>(orderService.updateOrder(id, updateOrderRequest),
-                HttpStatus.OK))
-                .map(a -> a)
-                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        return orderService.updateOrder(id, updateOrderRequest);
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "orders")
-    public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest createOrderRequest)
+    public OrderAggregate createOrder(@RequestBody CreateOrderRequest createOrderRequest)
             throws ExecutionException, InterruptedException {
         // Create new order entity and aggregate
-        return Optional.of(new ResponseEntity<>(orderService.createOrder(createOrderRequest), HttpStatus.OK))
-                .map(a -> a)
-                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+        return orderService.createOrder(createOrderRequest);
     }
 }

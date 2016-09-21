@@ -1,6 +1,5 @@
 package com.example.order.command;
 
-import com.example.order.repository.Order;
 import com.example.order.domain.OrderStatus;
 
 /**
@@ -9,10 +8,8 @@ import com.example.order.domain.OrderStatus;
 public class CreateOrderCommand implements OrderCommand {
 
     private OrderStatus initialStatus;
-    private Order orderEntity;
 
     public CreateOrderCommand(OrderStatus initialStatus) {
-        this.orderEntity = new Order();
         this.initialStatus = initialStatus;
     }
 
@@ -20,7 +17,4 @@ public class CreateOrderCommand implements OrderCommand {
         return initialStatus;
     }
 
-    public Order getOrderEntity() {
-        return orderEntity;
-    }
 }

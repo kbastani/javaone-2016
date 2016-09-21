@@ -7,19 +7,25 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>microservices</name>
-	<description>Demo project for Spring Boot</description>
-
 	<parent>
 		<groupId>com.example</groupId>
 		<artifactId>javaone-event-sourcing</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath>../</relativePath> <!-- lookup parent from repository -->
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+
+	<name>microservices</name>
+	<description>Demo project for Spring Boot</description>
+
+	<modules>
+		<module>order-service</module>
+		<module>account-service</module>
+	</modules>
+
 	<properties>
-		<eventuateClientVersion>0.8.0.RELEASE</eventuateClientVersion>
-		<eventuateLocalVersion>0.2.0.RELEASE</eventuateLocalVersion>
+		<eventuateClientVersion>0.10.0.RELEASE</eventuateClientVersion>
+		<eventuateLocalVersion>0.4.0.RELEASE</eventuateLocalVersion>
 	</properties>
 
 	<build>
@@ -36,6 +42,12 @@
 			<groupId>io.eventuate.client.java</groupId>
 			<artifactId>eventuate-client-java-spring</artifactId>
 			<version>${eventuateClientVersion}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.eventuate.client.java</groupId>
+			<artifactId>eventuate-client-java-test-util</artifactId>
+			<version>${eventuateClientVersion}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.eventuate.local.java</groupId>
