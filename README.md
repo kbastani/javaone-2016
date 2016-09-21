@@ -10,7 +10,7 @@ Wednesday, Sep 21, 3:00 p.m. - 4:00 p.m. | Parc 55 - Embarcadero
 
 ## Usage
 
-Setup your Eventuate local environment by running Docker Compose in the `/microservices` directory.
+Setup your [Eventuate](http://eventuate.io) local environment by running Docker Compose in the `/microservices` directory.
 
     $ docker-compose -f docker-compose-eventuate-local.yml up -d
 
