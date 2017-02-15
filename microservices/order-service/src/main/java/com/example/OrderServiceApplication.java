@@ -5,8 +5,8 @@ import com.example.order.command.OrderCommand;
 import com.example.order.query.OrderQuery;
 import io.eventuate.AggregateRepository;
 import io.eventuate.EventuateAggregateStore;
+import io.eventuate.javaclient.driver.EventuateDriverConfiguration;
 import io.eventuate.javaclient.spring.EnableEventHandlers;
-import io.eventuate.local.java.jdbckafkastore.EventuateJdbcEventStoreConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableEventHandlers
-@Import(EventuateJdbcEventStoreConfiguration.class)
+@Import(EventuateDriverConfiguration.class)
 @EnableTransactionManagement
 public class OrderServiceApplication {
 
